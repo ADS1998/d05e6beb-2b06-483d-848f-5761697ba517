@@ -53,8 +53,8 @@ The `build` script also accepts the following options:
 
 - `-verbose`:     print out additional information about what the script is
                   doing, including the executables detected, each intermediate
-                  file's dependencies, whether why each file needs to be
-                  updated, and why.
+                  file's dependencies, whether each file needs to be updated, 
+                  and why.
 
 - `-config name`: specify the build configuration to use (default: `debug`).
 
@@ -63,7 +63,16 @@ Available configurations for this project are:
 EOD
 
 for config in ${!description[@]}; do
-  echo "- \`$config\`: ${description[$config]}"
+  line="- \`$config\`: "
+  blank="${line//?/ }"
+  for token in ${description[$config]}; do
+    if (( ${#line} + ${#token} > 79 )); then 
+      echo "$line"
+      line="$blank"
+    fi
+    line+="$token "
+  done
+  (( ${#line} > 0 )) && echo "$line"
 done
 
   cat <<'EOD'
@@ -81,7 +90,7 @@ including:
 
 - `CXX`:        override the default compiler (default: `g++`)
 - `CXXSTD`:     override the default version of the C++ standard (default:
-                `c++20`) 
+                `c++20`)
 - `NJOBS`:      override the default number of concurrent compile jobs
                 (default: as reported by `nproc`)
 
@@ -116,13 +125,13 @@ declare -A cflags
 declare -A ldflags
 
 # compiler flags used for release build:
-description['release']="create build suitable for release"
+description['release']="create build suitable for release (enable optimisations level 2, and disable asserts)"
 cflags['release']="-O2 -DNDEBUG"
 ldflags['release']=""
 
 
 # compiler flags used for debug build:
-description['debug']="create build suitable for debugging"
+description['debug']="create build suitable for debugging (include debugging symbols, enable asserts and activate GCC debugging macros)"
 cflags['debug']="-D_GLIBCXX_DEBUG -D_GLIBCXX_DEBUG_PEDANTIC -g"
 ldflags['debug']="-g"
 
@@ -221,7 +230,7 @@ compile() {
   done
 
   # compile cpp file into object
-  cmd="$cxx ${cflags[$config]} -std=$std -I. -c $1 -o $2"
+  cmd="$cxx ${cflags[$config]} -std=$std -iquote . -c $1 -o $2"
 
   report "[CC]" $cmd
   ( 
