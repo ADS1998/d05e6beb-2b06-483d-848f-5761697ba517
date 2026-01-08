@@ -6,3 +6,5 @@ This repository holds the teaching materials for the KCL Biomedical Engineering
 - [📚 Click here to access the main course material](../../wiki/Home)
 - [🚀 Click here for instructions to start the development
   environment](../../wiki/Accessing-the-development-environment)
+- [🚴 Click here to access additional exercises for you to practice](exercises/)
+- [🏗️ Click here for more advanced projects](projects/) *(for advanced users)*
