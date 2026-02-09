@@ -25,7 +25,7 @@ rebase() {
 
   while [ $# -gt 0 ]; do
     echo -n "$1 "
-    [ $(git rev-parse $root) != $(git rev-parse $1) ] && git cherry-pick --quiet $root..$1 >/dev/null
+    [ $(git rev-parse $root) != $(git rev-parse $1) ] && git cherry-pick --empty=drop --quiet $root..$1 >/dev/null
     root=$(git rev-parse $1) 
     tip=$(git rev-parse HEAD)
     git branch -C $1
